@@ -1,0 +1,53 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1; /* Allow the element to grow */
+  width: 100vw;
+  height: 100vh; /* Full viewport height */
+}
+
+.main {
+  width: 100%;
+  height: 100%; /* Full viewport height */
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;  /* Stack elements in column layout by default */
+}
+
+.flow .reactflow-wrapper {
+  width: 80vw;
+  height: 85vh;
+}
+
+.flow .aside {
+  width: 20%;
+  max-width: 250px;
+}
+
+.valueField{
+  width:px
+}
+
+@media screen and (min-width: 768px) {
+  .flow {
+    display: flex;
+    flex-direction: row;  /* Switch to row layout for larger screens */
+    width: 100%;
+    height: 100%;
+  }
+
+  .flow .aside {
+    max-width: 250px;
+  }
+}
