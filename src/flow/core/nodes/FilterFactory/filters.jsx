@@ -1,4 +1,3 @@
-import { createListCollection } from "@chakra-ui/react"
 
 export const filters = [
     { value: "authorships.author.id", label: "Author ID", groupLabel:"Authorship", group:"authorship",inputType:"term" },
@@ -158,9 +157,9 @@ export const filters = [
 
 const allgroups = ['Search Fields','Core','Authorship','Publication','Concepts','Open Access','Citations', 'Identifiers','APC', 'Correspondance', 'Funding', undefined, 'Publication Dates', 'Misc'];
 
-export const filterCollection = createListCollection({
+export const filterCollection = {
   items: filters
-});
+};
 
 // Group filters
 const groupedFilters = filterCollection.items.reduce((acc, item) => {

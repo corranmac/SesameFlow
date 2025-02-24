@@ -1,8 +1,7 @@
-import Canvas from './flow/core/Canvas'
-import {FlowWorkspace} from "@/pages/FlowWorkspace"
+import {FlowWorkspace} from "@/app/FlowWorkspace"
 import Tester from "@/dexietest/tester"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavBar from "./nav/navbar";
+import NavBar from "@/layout/navbar";
 
 export default function App() {
   return (

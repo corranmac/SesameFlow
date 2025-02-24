@@ -10,9 +10,10 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src'),  // This is the default alias
       '~': path.resolve(__dirname),         // Map "~" to the project root
+      '@sesameflow': path.resolve(__dirname,'src/components/index'),
       '@flow': path.resolve(__dirname, 'src/flow/'),
-      '@flowcore': path.resolve(__dirname, 'src/flow/core'), // Example for a top-level 'components' folder
-      '@flowstate': path.resolve(__dirname, 'src/flow/stores/flowstate') // Example for a top-level 'components' folder
+      '@flowcore': path.resolve(__dirname, 'src/flow/core'), 
+      '@flowstate': path.resolve(__dirname, 'src/flow/stores/state-store') 
     }
   }
 })

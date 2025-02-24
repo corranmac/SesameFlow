@@ -1,16 +1,3 @@
-import { Button,Flex } from "@chakra-ui/react"
-import {
-  DrawerActionTrigger,
-  DrawerBackdrop,
-  DrawerBody,
-  DrawerCloseTrigger,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerRoot,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
 import React, {useState} from "react"
 import {nodeselects} from '@flowcore/utils/nodeselects';
 

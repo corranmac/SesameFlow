@@ -9,7 +9,7 @@ import {
   type Viewport,
 } from '@xyflow/react';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { useFlowManagerContext } from '@/pages/FlowWorkspace'; // Import the context hook
+import { useFlowManagerContext } from '@/app/FlowWorkspace';
 import { useShallow } from 'zustand/react/shallow';
 
 const initialEdges = [] as Edge[];
@@ -39,8 +39,9 @@ type FlowState = {
 type FlowStore = {
   flows: Record<string, FlowState>;
   currentFlowId: string;
+  flowMetadata:{ [key: string]: any };
   
-  createFlow: (flowId: string, nodes, edges) => void;
+  createFlow: (flowId: string, metadata: { [key: string]: any }, nodes, edges) => void;
   setCurrentFlow: (flowId: string) => void;
   renameCurrentFlow: (newName: string) => void;
   deleteFlow: (flowId: string) => void;
@@ -67,17 +68,36 @@ const useStore = create<FlowStore>()(
   persist(
     (set, get) => ({
       flows: {}, 
+      flowMetadata: {},
       currentFlowId: '',
 
-      createFlow: (flowId: string, nodes, edges) => {
+      createFlow: (flowId: string, metadata: { [key: string]: any }, nodes, edges) => {
         set((state) => ({
           flows: {
             ...state.flows,
             [flowId]: { nodes: nodes, edges: edges, viewport: initialViewport },
           },
           currentFlowId: flowId,
+          flowMetadata: {
+            ...state.flowMetadata,
+            [flowId]: metadata,
+          },
         }));
       },
+
+      updateFlowMetadata: (flowId: string, metadata: { [key: string]: any }) => {
+        if (get().flows[flowId]) {
+          set((state) => ({
+            flowMetadata: {
+              ...state.flowMetadata,
+              [flowId]: {
+                ...state.flowMetadata[flowId], // Preserve existing metadata for this flow
+                ...metadata, // Merge the new metadata
+              },
+            },
+          }));
+        }
+      }, 
 
       setCurrentFlow: (flowId: string) => {
         if (get().flows[flowId]) {
@@ -98,10 +118,13 @@ const useStore = create<FlowStore>()(
       deleteFlow: (flowId: string) => {
         set((state) => {
           const updatedFlows = { ...state.flows };
+          const updatedMetadata = {...state.flowMetadata}
           delete updatedFlows[flowId];
+          delete updatedMetadata[flowId];
 
           return {
             flows: updatedFlows,
+            flowMetadata: updatedMetadata,
             currentFlowId: Object.keys(updatedFlows)[0] || '',
           };
         });
@@ -114,7 +137,6 @@ const useStore = create<FlowStore>()(
         set((state) => {
           const flow = state.flows[state.currentFlowId];
           if (!flow) return {};
-      
           return {
             flows: {
               ...state.flows,
@@ -124,7 +146,7 @@ const useStore = create<FlowStore>()(
               },
             },
           };
-        }, false); // Avoid triggering unnecessary re-renders
+        }); // Avoid triggering unnecessary re-renders
       },
       
       onEdgesChange: (changes) => {
@@ -141,7 +163,7 @@ const useStore = create<FlowStore>()(
               },
             },
           };
-        }, false);
+        });
       },      
 
       onConnect: (connection) => {
@@ -188,7 +210,7 @@ const useStore = create<FlowStore>()(
               },
             },
           };
-        }, false);
+        });
       },      
 
       clearState: () => {
@@ -264,10 +286,11 @@ const useStore = create<FlowStore>()(
     }),
     {
       name: 'multi-flow-state',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         flows: state.flows,
         currentFlowId: state.currentFlowId,
+        flowMetadata: state.flowMetadata
       }),
     }
   )
@@ -276,6 +299,8 @@ const useStore = create<FlowStore>()(
 const selector = (state) => ({
   flows: state.flows,
   currentFlowId: state.currentFlowId,
+  flowMetadata: state.flowMetadata,
+  updateFlowMetadata: state.updateFlowMetadata,
   createFlow: state.createFlow,
   setCurrentFlow: state.setCurrentFlow,
   renameCurrentFlow: state.renameCurrentFlow,
@@ -308,14 +333,7 @@ const useFlowStore = () => {
   const store = useStore(useShallow(selector));
 
   if (!context?.isParent) {
-    return {
-      flows: store.flows,
-      currentFlowId: store.currentFlowId,
-      createFlow: store.createFlow,
-      setCurrentFlow: store.setCurrentFlow,
-      renameCurrentFlow: store.renameCurrentFlow,
-      currentFlow: store.currentFlow
-    };
+    return useStore();
   }
   else{
     return nodeSelector(store);

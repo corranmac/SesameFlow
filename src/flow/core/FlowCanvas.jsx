@@ -6,13 +6,13 @@ import {
   ReactFlowProvider,
 } from '@xyflow/react';
 
-const Canvas = () => {
+const Canvas = ({nodes,edges}) => {
   
   return (
     <div className="main">
       <ErrorBoundary>
         <ReactFlowProvider>
-          <FlowEditor />
+          <FlowEditor nodes={nodes} edges={edges}/>
         </ReactFlowProvider>
       </ErrorBoundary>
     </div>

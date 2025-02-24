@@ -7,35 +7,28 @@ import {
   Controls,
   useReactFlow,
   Background,
-  useOnViewportChange 
+  useOnViewportChange,
+  useInternalNode
 } from '@xyflow/react';
 
-import {Button} from "@chakra-ui/react";
-import { DnDProvider, useDnD } from './utils/draganddrop';
+import { DnDProvider, useDnD } from './utils/useDragAndDrop';
 import '@xyflow/react/dist/style.css';
-import { getRegisteredNodeTypes, loadRegistry } from '../registry/NodeRegistry';
+import { getRegisteredNodeTypes, loadRegistry } from '@flow/registry/flowNodeRegistry.js';
 
 import { nanoid } from 'nanoid'
 
-import {NodeMenu} from "@flowcore/NodeMenu"
-import {EventContext} from "@flowcore/utils/eventcontext"
+import {nodeCreationContext} from "@flowcore/utils/nodecontext"
 
 import useFlowStore from "@flowstate/store"
 import { useShallow } from 'zustand/react/shallow';
 
-import { throttle } from 'lodash';
-
-const THROTTLE_TIME = 2; // Adjust based on performance needs
-
 loadRegistry();
 const nodeTypes = getRegisteredNodeTypes();
 
-const FlowEditor = (props) => {
+const FlowEditor = ({nodesIn,edgesIn,...props }) => {
   const reactFlowWrapper = useRef(null);
   // First, get the active flow state
   const {
-    nodes,
-    edges,
     viewport,
     onNodesChange,
     onEdgesChange,
@@ -43,8 +36,10 @@ const FlowEditor = (props) => {
     addNode,
     setViewport,
     clearStore,
-  } = useFlowStore(useShallow((state)=>(state.currentFlow)))
+  } = useFlowStore()
 
+  const nodes = nodesIn
+  const edges = edgesIn
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useDnD();
 
@@ -54,6 +49,25 @@ const FlowEditor = (props) => {
   const openNodeMenu = (handlePosition, nodePosition) => {
     setCreateFrom({handlePosition,nodePosition})
   };
+  const reactFlow = useReactFlow();
+
+
+  const onCreateNode = useCallback((nodeId,handlePosition,type)=>{
+    let internalNode = reactFlow.getNodes().find((node)=>(node.id==nodeId))
+    let x = internalNode.position.x;
+    let y = internalNode.position.y;
+    
+    const w = internalNode.measured.width;
+    const h = internalNode.measured.height;
+    const xgap = 50;
+    const ygap = 20;
+
+    if (handlePosition === "right") x = x + xgap + w;
+    if (handlePosition === "left") x = x - xgap - w;
+    if (handlePosition === "top") y = y - ygap - h;
+    if (handlePosition === "bottom") y = y + ygap + h;
+    addNode({'id':nanoid(),'type':type,'position':{'x':x,'y':y},'data':{}})}
+  )
   
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -100,7 +114,7 @@ const FlowEditor = (props) => {
                 ></div>
               )}
       <div ref={reactFlowWrapper} className="reactflow-wrapper">
-        <EventContext.Provider value={openNodeMenu}>
+        <nodeCreationContext.Provider value={onCreateNode}>
             <ReactFlow nodes={nodes} 
             defaultViewport={viewport}
             edges={edges} 
@@ -117,18 +131,17 @@ const FlowEditor = (props) => {
             >
               <Controls />
               <Background color="#aaa" gap={16} />
-              <NodeMenu createFrom={createFrom} setCreateFrom={setCreateFrom}/>
             </ReactFlow>
-        </EventContext.Provider>
+        </nodeCreationContext.Provider>
       </div>
       </div>
   );
 };
 
-export default () => (
+export default ({nodes,edges}) => (
   <ReactFlowProvider>
     <DnDProvider>
-      <FlowEditor />
+      <FlowEditor nodesIn={nodes} edgesIn={edges}/>
     </DnDProvider>
   </ReactFlowProvider>
 );

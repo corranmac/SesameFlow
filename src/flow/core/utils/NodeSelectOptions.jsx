@@ -1,13 +1,7 @@
 import React,{useState} from 'react';
 import { useDnD } from '@flowcore/utils/draganddrop';
 import { getRegisteredNodeTypes } from '@flow/registry/NodeRegistry';
-import { Box,Flex } from "@chakra-ui/react"
-import {
-  AccordionItem,
-  AccordionItemContent,
-  AccordionItemTrigger,
-  AccordionRoot,
-} from "@chakra-ui/react/accordion"
+
 
 export const nodeselects = () => {
   const [_, setType] = useDnD();
