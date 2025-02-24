@@ -9,39 +9,51 @@ import {
   Background,
   useOnViewportChange 
 } from '@xyflow/react';
-import { DnDProvider, useDnD } from './utils/draganddrop';
-import Sidebar from './SideBar';
-import '@xyflow/react/dist/style.css';
 
+import {Button} from "@chakra-ui/react";
+import { DnDProvider, useDnD } from './utils/draganddrop';
+import '@xyflow/react/dist/style.css';
 import { getRegisteredNodeTypes, loadRegistry } from '../registry/NodeRegistry';
 
-import { useShallow } from 'zustand/react/shallow';
-import useStore from '@flowstate/store';
 import { nanoid } from 'nanoid'
 
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  viewport: state.viewport,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-  addNode: state.addNode,
-  setViewport: state.setViewport,
-});
+import {NodeMenu} from "@flowcore/NodeMenu"
+import {EventContext} from "@flowcore/utils/eventcontext"
 
+import useFlowStore from "@flowstate/store"
+import { useShallow } from 'zustand/react/shallow';
+
+import { throttle } from 'lodash';
+
+const THROTTLE_TIME = 2; // Adjust based on performance needs
 
 loadRegistry();
-const nodeTypes_ = getRegisteredNodeTypes();
+const nodeTypes = getRegisteredNodeTypes();
 
 const FlowEditor = (props) => {
   const reactFlowWrapper = useRef(null);
-  const { nodes, edges, viewport, onNodesChange, onEdgesChange, onConnect,addNode,setViewport } = useStore(
-    useShallow(selector),
-  );
-  const nodeTypes = useMemo(()=>nodeTypes_,[nodeTypes_]);
+  // First, get the active flow state
+  const {
+    nodes,
+    edges,
+    viewport,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    addNode,
+    setViewport,
+    clearStore,
+  } = useFlowStore(useShallow((state)=>(state.currentFlow)))
+
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useDnD();
+
+  /// Handle the node creation button click event, set the position of the handle, its node and the menu state
+  const [createFrom, setCreateFrom] = useState({})
+
+  const openNodeMenu = (handlePosition, nodePosition) => {
+    setCreateFrom({handlePosition,nodePosition})
+  };
   
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -81,8 +93,14 @@ const FlowEditor = (props) => {
 
   return (
     <div className="flow">
-      <Sidebar />
+                  {!Object.keys(createFrom).length === 0 && (
+                <div 
+                  style={{position: "absolute", inset:0,backgroundColor:"black",opacity:0.5,zIndex:4, pointerEvents:"auto"}}
+                  onClick={() => setCreateFrom()} // Optional: close on backdrop click
+                ></div>
+              )}
       <div ref={reactFlowWrapper} className="reactflow-wrapper">
+        <EventContext.Provider value={openNodeMenu}>
             <ReactFlow nodes={nodes} 
             defaultViewport={viewport}
             edges={edges} 
@@ -97,10 +115,11 @@ const FlowEditor = (props) => {
             minZoom={0.2}
             connectionLineType={"smoothstep"}
             >
-              <MiniMap />
               <Controls />
               <Background color="#aaa" gap={16} />
+              <NodeMenu createFrom={createFrom} setCreateFrom={setCreateFrom}/>
             </ReactFlow>
+        </EventContext.Provider>
       </div>
       </div>
   );

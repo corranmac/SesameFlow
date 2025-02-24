@@ -7,6 +7,7 @@ import {
 } from '@xyflow/react';
 
 const Canvas = () => {
+  
   return (
     <div className="main">
       <ErrorBoundary>

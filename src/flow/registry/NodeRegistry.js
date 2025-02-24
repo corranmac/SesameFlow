@@ -9,7 +9,7 @@ const nodeRegistry = {};
  * Dynamically imports all node components from /src/core/nodes/
  */
 async function registerCoreNodes() {
-  const modules = import.meta.glob('../core/nodes/*/*.jsx', { eager: true });
+  const modules = import.meta.glob('../core/nodes/**/*{Node,Factory}.jsx', { eager: true });
 
   for (const path in modules) {
     const module = modules[path];
@@ -63,8 +63,6 @@ function loadRegistryFromStorage() {
       Object.keys(parsed).forEach((type) => {
         if (nodeRegistry[type]) {
           nodeRegistry[type].config = parsed[type];
-        } else {
-          console.warn(`Configuration for node type "${type}" found in storage but no component is registered.`);
         }
       });
     } catch (error) {

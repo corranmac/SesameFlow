@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { Box,Tag,Flex } from "@chakra-ui/react"
-import RootNode from "./RootNode"
+import RootNode from "./root"
 
-const BasicNode = ({ children, type, group, ...props }) => {
-    return(
-    <RootNode incoming={true} outgoing={true} {...props}>
+const BasicNode = ({ children, type}) => {
+
+  return(
+    <RootNode incoming={true} outgoing={true}>
       <Flex minH = "20vh" alignItems="stretch" justifyContent="stretch">
           <Tag.Root 
             backgroundColor="#c3fcf1" 
@@ -24,4 +25,4 @@ const BasicNode = ({ children, type, group, ...props }) => {
     </RootNode>);
 };
 
-export default BasicNode;
+export default React.memo(BasicNode);

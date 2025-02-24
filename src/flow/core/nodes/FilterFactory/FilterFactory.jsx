@@ -1,19 +1,23 @@
-import { useMemo,memo } from "react";
+import { useMemo,memo,useCallback } from "react";
 import { SelectItem, SelectItemGroup,SelectRoot,SelectContent,SelectLabel,SelectTrigger,SelectValueText } from "@/components/ui/select";
 import { groups } from "./filters";
-import BasicNode from "../Base/FilterNode"
 import { createListCollection,Input,Field,Flex } from "@chakra-ui/react"
-import useStore from '@flowstate/store';
-
+import useFlowStore from '@flowstate/store';
+import BasicNode from "@flowcore/nodes/Base/filtertype"
 
 const BooleanInput = ({id, data}) =>{
-  const updateNodeData = useStore((state) => state.updateNodeData);
-  const itemsCollection = createListCollection({
+  const updateNodeData = useFlowStore((state) => state.updateNodeData);
+
+  const handleChange = useCallback((event) => {
+    updateNodeData(id, { filter_value: event.target.value });
+  }, [data]);
+
+  const itemsCollection = useMemo(()=>createListCollection({
     items: ['True','False']
-  });
+  }));
 
   return(
-    <SelectRoot collection={itemsCollection} value={data.filter_value} onValueChange={(event) => updateNodeData(id, {filter_value:event.value})}>
+    <SelectRoot collection={itemsCollection} value={data.filter_value} onValueChange={handleChange}>
     <SelectTrigger>
       <SelectValueText placeholder="value" />
     </SelectTrigger>
@@ -29,22 +33,29 @@ const BooleanInput = ({id, data}) =>{
 }
 
 const TermInput = ({id,data}) =>{
-  const updateNodeData = useStore((state) => state.updateNodeData);
+  const updateNodeData = useFlowStore((state) => state.updateNodeData);
+  const handleChange = useCallback((event) => {
+    updateNodeData(id, { filter_value: event.target.value });
+  }, [data]);
   return(
     <Field.Root>
-      <Input placeholder="value" defaultValue={data.filter_value} onChange={(event) => updateNodeData(id, {filter_value:event.target.value})}/>
+      <Input placeholder="value" defaultValue={data.filter_value} onChange={handleChange}/>
     </Field.Root>
   );
 }
 
 const RangeInput = ({id,data}) =>{
-  const updateNodeData = useStore((state) => state.updateNodeData);
+  const updateNodeData = useFlowStore((state) => state.updateNodeData);
   return(<>Hi</>);
 }
 
 
 const FilterSelection = ({ id, group, itemsCollection, dragging, data }) => {
-  const updateNodeData = useStore((state) => state.updateNodeData);
+  const updateNodeData = useFlowStore((state) => state.updateNodeData);
+  const handleChange = useCallback((event) => {
+    updateNodeData(id, {filter:event.value, filter_value:""});
+  }, [data]);
+
   const Selects = useMemo(() => {
     return (
       <SelectItemGroup key={group} overflowY="auto" maxHeight="30vh">
@@ -58,7 +69,7 @@ const FilterSelection = ({ id, group, itemsCollection, dragging, data }) => {
   }, [group, itemsCollection]);
 
   return (
-      <SelectRoot minW="24vw" variant="subtle" value={data.filter} onValueChange={(event) => updateNodeData(id, {filter:event.value, filter_value:""})} collection={ itemsCollection } >
+      <SelectRoot minW="24vw" variant="subtle" value={data.filter} onValueChange={handleChange} collection={ itemsCollection } >
         <SelectTrigger>
           <SelectValueText placeholder="Filter" />
         </SelectTrigger>

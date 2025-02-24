@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
-import { useDnD } from './utils/draganddrop';
-import { getRegisteredNodeTypes } from '../registry/NodeRegistry';
+import { useDnD } from '@flowcore/utils/draganddrop';
+import { getRegisteredNodeTypes } from '@flow/registry/NodeRegistry';
 import { Box,Flex } from "@chakra-ui/react"
 import {
   AccordionItem,
@@ -9,7 +9,7 @@ import {
   AccordionRoot,
 } from "@chakra-ui/react/accordion"
 
-export default () => {
+export const nodeselects = () => {
   const [_, setType] = useDnD();
   const nodeTypes = getRegisteredNodeTypes(); // Get registered nodes
   const [value, setValue] = useState(["Repositorys"])
@@ -28,11 +28,6 @@ export default () => {
   };
  
   return (
-    <Flex
-    className="aside"
-    justify="space-between"
-    wrap="wrap"
-    p={4}>
     <AccordionRoot overflowY="auto" maxHeight="80vh" value={value} onValueChange={(e) => setValue(e.value)} variant={"outline"} collapsible={true} multiple={true}>
       {Object.entries(groupedNodes).map(([groupName, nodes]) => (
         <AccordionItem key={groupName} value={groupName}>
@@ -59,6 +54,5 @@ export default () => {
         ))
       }
       </AccordionRoot>
-    </Flex>
   );
 };
