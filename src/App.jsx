@@ -1,6 +1,6 @@
 import {FlowWorkspace} from "@/app/FlowWorkspace"
 import Homepage from "@/app/Homepage"
-import NavBar from "@/layout/navbar";
+import NavBar from "@/layout/Navbar";
 import Tester from "@/dexie-test/tester"
 
 import { BrowserRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
