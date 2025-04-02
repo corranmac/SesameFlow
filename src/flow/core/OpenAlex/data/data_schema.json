@@ -1,0 +1,830 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "OpenAlex Work",
+    "description": "A schema for an OpenAlex Work object, representing academic works like research papers",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The OpenAlex ID for this work",
+        "examples": ["https://openalex.org/W2741809807"]
+      },
+      "doi": {
+        "type": "string",
+        "description": "The DOI for the work",
+        "examples": ["https://doi.org/10.7717/peerj.4375"]
+      },
+      "title": {
+        "type": "string",
+        "description": "The title of this work",
+        "examples": ["The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles"]
+      },
+      "display_name": {
+        "type": "string",
+        "description": "Exactly the same as Work.title",
+        "examples": ["The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles"]
+      },
+      "publication_year": {
+        "type": "integer",
+        "description": "The year this work was published",
+        "examples": [2018]
+      },
+      "publication_date": {
+        "type": "string",
+        "format": "date",
+        "description": "The day when this work was published, formatted as an ISO 8601 date",
+        "examples": ["2018-02-13"]
+      },
+      "type": {
+        "type": "string",
+        "description": "The type of the work",
+        "examples": ["article"]
+      },
+      "type_crossref": {
+        "type": "string",
+        "description": "Legacy type information, using Crossref's \"type\" controlled vocabulary",
+        "examples": ["journal-article"]
+      },
+      "is_paratext": {
+        "type": "boolean",
+        "description": "True if we think this work is paratext"
+      },
+      "is_retracted": {
+        "type": "boolean",
+        "description": "True if we know this work has been retracted"
+      },
+      "has_fulltext": {
+        "type": "boolean",
+        "description": "Set to true if the work's full text is searchable in OpenAlex"
+      },
+      "fulltext_origin": {
+        "type": "string",
+        "description": "If a work's full text is searchable in OpenAlex, this tells you how we got the text",
+        "enum": ["pdf", "ngrams"]
+      },
+      "cited_by_count": {
+        "type": "integer",
+        "description": "The number of citations to this work",
+        "examples": [382]
+      },
+      "cited_by_api_url": {
+        "type": "string",
+        "description": "A URL that uses the cites filter to display a list of works that cite this work"
+      },
+      "abstract_inverted_index": {
+        "type": "object",
+        "description": "The abstract of the work, as an inverted index",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "keywords": {
+        "type": "array",
+        "description": "Short phrases identified based on works' Topics",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "examples": ["https://openalex.org/keywords/global-seaweed-distribution"]
+            },
+            "display_name": {
+              "type": "string",
+              "examples": ["Global Seaweed Distribution"]
+            },
+            "score": {
+              "type": "number",
+              "examples": [0.559386]
+            }
+          },
+          "required": ["id", "display_name", "score"]
+        }
+      },
+      "authorships": {
+        "type": "array",
+        "description": "List of Authorship objects, each representing an author and their institution",
+        "items": {
+          "type": "object",
+          "properties": {
+            "author_position": {
+              "type": "string",
+              "examples": ["middle"]
+            },
+            "author": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "examples": ["https://openalex.org/A5023888391"]
+                },
+                "display_name": {
+                  "type": "string",
+                  "examples": ["Jason Priem"]
+                },
+                "orcid": {
+                  "type": "string",
+                  "examples": ["https://orcid.org/0000-0001-6187-6610"]
+                }
+              },
+              "required": ["id", "display_name"]
+            },
+            "institutions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "examples": ["https://openalex.org/I4200000001"]
+                  },
+                  "display_name": {
+                    "type": "string",
+                    "examples": ["OurResearch"]
+                  },
+                  "ror": {
+                    "type": "string",
+                    "examples": ["https://ror.org/02nr0ka47"]
+                  },
+                  "country_code": {
+                    "type": "string",
+                    "examples": ["US"]
+                  },
+                  "type": {
+                    "type": "string",
+                    "examples": ["nonprofit"]
+                  }
+                },
+                "required": ["id", "display_name"]
+              }
+            },
+            "is_corresponding": {
+              "type": "boolean"
+            }
+          },
+          "required": ["author_position", "author"]
+        }
+      },
+      "countries_distinct_count": {
+        "type": "integer",
+        "description": "Number of distinct country_codes among the authorships for this work",
+        "examples": [4]
+      },
+      "institutions_distinct_count": {
+        "type": "integer",
+        "description": "Number of distinct institutions among the authorships for this work",
+        "examples": [4]
+      },
+      "corresponding_author_ids": {
+        "type": "array",
+        "description": "OpenAlex IDs of any authors for which authorships.is_corresponding is true",
+        "items": {
+          "type": "string",
+          "examples": ["https://openalex.org/A5004365451"]
+        }
+      },
+      "corresponding_institution_ids": {
+        "type": "array",
+        "description": "OpenAlex IDs of any institutions found within an authorship for which authorships.is_corresponding is true",
+        "items": {
+          "type": "string",
+          "examples": ["https://openalex.org/I4210123613"]
+        }
+      },
+      "apc_list": {
+        "type": "object",
+        "description": "Information about this work's APC (article processing charge)",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "examples": [3200]
+          },
+          "currency": {
+            "type": "string",
+            "examples": ["USD"]
+          },
+          "value_usd": {
+            "type": "integer",
+            "examples": [3200]
+          },
+          "provenance": {
+            "type": "string",
+            "examples": ["doaj"]
+          }
+        },
+        "required": ["value", "currency", "value_usd", "provenance"]
+      },
+      "apc_paid": {
+        "type": "object",
+        "description": "Information about the paid APC (article processing charge) for this work",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "examples": [2250]
+          },
+          "currency": {
+            "type": "string",
+            "examples": ["EUR"]
+          },
+          "value_usd": {
+            "type": "integer",
+            "examples": [2426]
+          },
+          "provenance": {
+            "type": "string",
+            "enum": ["openapc", "doaj"],
+            "examples": ["openapc"]
+          }
+        },
+        "required": ["value", "currency", "value_usd", "provenance"]
+      },
+      "biblio": {
+        "type": "object",
+        "description": "Old-timey bibliographic info for this work",
+        "properties": {
+          "volume": {
+            "type": "string",
+            "examples": ["495"]
+          },
+          "issue": {
+            "type": "string",
+            "examples": ["7442"]
+          },
+          "first_page": {
+            "type": "string",
+            "examples": ["437"]
+          },
+          "last_page": {
+            "type": "string",
+            "examples": ["440"]
+          }
+        }
+      },
+      "primary_location": {
+        "type": "object",
+        "description": "A Location object with the primary location of this work",
+        "properties": {
+          "is_oa": {
+            "type": "boolean"
+          },
+          "landing_page_url": {
+            "type": "string",
+            "examples": ["https://doi.org/10.1073/pnas.17.6.401"]
+          },
+          "pdf_url": {
+            "type": ["string", "null"],
+            "examples": ["http://www.pnas.org/content/17/6/401.full.pdf"]
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "examples": ["https://openalex.org/S125754415"]
+              },
+              "display_name": {
+                "type": "string",
+                "examples": ["Proceedings of the National Academy of Sciences of the United States of America"]
+              },
+              "issn_l": {
+                "type": ["string", "null"],
+                "examples": ["0027-8424"]
+              },
+              "issn": {
+                "type": ["array", "null"],
+                "items": {
+                  "type": "string"
+                },
+                "examples": [["1091-6490", "0027-8424"]]
+              },
+              "host_organization": {
+                "type": ["string", "null"],
+                "examples": ["https://openalex.org/P4310320052"]
+              },
+              "type": {
+                "type": "string",
+                "enum": ["journal", "repository", "conference"],
+                "examples": ["journal"]
+              }
+            },
+            "required": ["id", "display_name", "type"]
+          },
+          "license": {
+            "type": ["string", "null"],
+            "examples": ["cc-by"]
+          },
+          "version": {
+            "type": ["string", "null"],
+            "enum": ["publishedVersion", "acceptedVersion", "submittedVersion"],
+            "examples": ["publishedVersion"]
+          }
+        },
+        "required": ["is_oa", "source"]
+      },
+      "best_oa_location": {
+        "type": "object",
+        "description": "A Location object with the best available open access location for this work",
+        "properties": {
+          "is_oa": {
+            "type": "boolean"
+          },
+          "landing_page_url": {
+            "type": "string",
+            "examples": ["https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1398957"]
+          },
+          "pdf_url": {
+            "type": ["string", "null"]
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "examples": ["https://openalex.org/S2764455111"]
+              },
+              "display_name": {
+                "type": "string",
+                "examples": ["PubMed Central"]
+              },
+              "issn_l": {
+                "type": ["string", "null"]
+              },
+              "issn": {
+                "type": ["array", "null"],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "host_organization": {
+                "type": ["string", "null"],
+                "examples": ["https://openalex.org/I1299303238"]
+              },
+              "type": {
+                "type": "string",
+                "enum": ["journal", "repository", "conference"],
+                "examples": ["repository"]
+              }
+            },
+            "required": ["id", "display_name", "type"]
+          },
+          "license": {
+            "type": ["string", "null"]
+          },
+          "version": {
+            "type": ["string", "null"],
+            "enum": ["publishedVersion", "acceptedVersion", "submittedVersion"],
+            "examples": ["publishedVersion"]
+          }
+        },
+        "required": ["is_oa", "source"]
+      },
+      "locations": {
+        "type": "array",
+        "description": "A list of Location objects describing all unique places where this work lives",
+        "items": {
+          "type": "object",
+          "properties": {
+            "is_oa": {
+              "type": "boolean"
+            },
+            "landing_page_url": {
+              "type": "string",
+              "examples": ["https://doi.org/10.1073/pnas.17.6.401"]
+            },
+            "pdf_url": {
+              "type": ["string", "null"],
+              "examples": ["http://www.pnas.org/content/17/6/401.full.pdf"]
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "examples": ["https://openalex.org/S125754415"]
+                },
+                "display_name": {
+                  "type": "string",
+                  "examples": ["Proceedings of the National Academy of Sciences of the United States of America"]
+                },
+                "issn_l": {
+                  "type": ["string", "null"],
+                  "examples": ["0027-8424"]
+                },
+                "issn": {
+                  "type": ["array", "null"],
+                  "items": {
+                    "type": "string"
+                  },
+                  "examples": [["1091-6490", "0027-8424"]]
+                },
+                "host_organization": {
+                  "type": ["string", "null"],
+                  "examples": ["https://openalex.org/P4310320052"]
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["journal", "repository", "conference"],
+                  "examples": ["journal"]
+                }
+              },
+              "required": ["id", "display_name", "type"]
+            },
+            "license": {
+              "type": ["string", "null"],
+              "examples": ["cc-by"]
+            },
+            "version": {
+              "type": ["string", "null"],
+              "enum": ["publishedVersion", "acceptedVersion", "submittedVersion"],
+              "examples": ["publishedVersion"]
+            }
+          },
+          "required": ["is_oa", "source"]
+        }
+      },
+      "locations_count": {
+        "type": "integer",
+        "description": "Number of locations for this work",
+        "examples": [3]
+      },
+      "open_access": {
+        "type": "object",
+        "description": "Information about the access status of this work",
+        "properties": {
+          "is_oa": {
+            "type": "boolean",
+            "description": "True if this work is Open Access (OA)"
+          },
+          "oa_status": {
+            "type": "string",
+            "description": "The Open Access (OA) status of this work",
+            "enum": ["diamond", "gold", "green", "hybrid", "bronze", "closed"],
+            "examples": ["gold"]
+          },
+          "oa_url": {
+            "type": "string",
+            "description": "The best Open Access (OA) URL for this work",
+            "examples": ["https://peerj.com/articles/4375.pdf"]
+          },
+          "any_repository_has_fulltext": {
+            "type": "boolean",
+            "description": "True if any of this work's locations has location.is_oa=true and location.source.type=repository"
+          }
+        },
+        "required": ["is_oa", "oa_status", "any_repository_has_fulltext"]
+      },
+      "concepts": {
+        "type": "array",
+        "description": "List of dehydrated Concept objects",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "examples": ["https://openalex.org/C71924100"]
+            },
+            "wikidata": {
+              "type": "string",
+              "examples": ["https://www.wikidata.org/wiki/Q11190"]
+            },
+            "display_name": {
+              "type": "string",
+              "examples": ["Medicine"]
+            },
+            "level": {
+              "type": "integer",
+              "examples": [0]
+            },
+            "score": {
+              "type": "number",
+              "description": "The strength of the connection between the work and this concept",
+              "examples": [0.9187037]
+            }
+          },
+          "required": ["id", "display_name", "level", "score"]
+        }
+      },
+      "primary_topic": {
+        "type": "object",
+        "description": "The top ranked Topic for this work",
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": ["https://openalex.org/T12419"]
+          },
+          "display_name": {
+            "type": "string",
+            "examples": ["Analysis of Cardiac and Respiratory Sounds"]
+          },
+          "score": {
+            "type": "number",
+            "examples": [0.9997]
+          },
+          "subfield": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "examples": [2740]
+              },
+              "display_name": {
+                "type": "string",
+                "examples": ["Pulmonary and Respiratory Medicine"]
+              }
+            },
+            "required": ["id", "display_name"]
+          },
+          "field": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "examples": [27]
+              },
+              "display_name": {
+                "type": "string",
+                "examples": ["Medicine"]
+              }
+            },
+            "required": ["id", "display_name"]
+          },
+          "domain": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "examples": [4]
+              },
+              "display_name": {
+                "type": "string",
+                "examples": ["Health Sciences"]
+              }
+            },
+            "required": ["id", "display_name"]
+          }
+        },
+        "required": ["id", "display_name", "score", "subfield", "field", "domain"]
+      },
+      "topics": {
+        "type": "array",
+        "description": "The top ranked Topics for this work",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "examples": ["https://openalex.org/T12419"]
+            },
+            "display_name": {
+              "type": "string",
+              "examples": ["Analysis of Cardiac and Respiratory Sounds"]
+            },
+            "score": {
+              "type": "number",
+              "examples": [0.9997]
+            },
+            "subfield": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "examples": [2740]
+                },
+                "display_name": {
+                  "type": "string",
+                  "examples": ["Pulmonary and Respiratory Medicine"]
+                }
+              },
+              "required": ["id", "display_name"]
+            },
+            "field": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "examples": [27]
+                },
+                "display_name": {
+                  "type": "string",
+                  "examples": ["Medicine"]
+                }
+              },
+              "required": ["id", "display_name"]
+            },
+            "domain": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "examples": [4]
+                },
+                "display_name": {
+                  "type": "string",
+                  "examples": ["Health Sciences"]
+                }
+              },
+              "required": ["id", "display_name"]
+            }
+          },
+          "required": ["id", "display_name", "score", "subfield", "field", "domain"]
+        }
+      },
+      "mesh": {
+        "type": "array",
+        "description": "List of MeSH tag objects. Only works found in PubMed have MeSH tags",
+        "items": {
+          "type": "object",
+          "properties": {
+            "descriptor_ui": {
+              "type": "string",
+              "examples": ["D017712"]
+            },
+            "descriptor_name": {
+              "type": "string",
+              "examples": ["Peer Review, Research"]
+            },
+            "qualifier_ui": {
+              "type": "string",
+              "examples": ["Q000379"]
+            },
+            "qualifier_name": {
+              "type": "string",
+              "examples": ["methods"]
+            },
+            "is_major_topic": {
+              "type": "boolean"
+            }
+          },
+          "required": ["descriptor_ui", "descriptor_name", "is_major_topic"]
+        }
+      },
+      "sustainable_development_goals": {
+        "type": "array",
+        "description": "List of objects representing relevance to the United Nations' 17 Sustainable Development Goals",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "examples": ["https://metadata.un.org/sdg/3"]
+            },
+            "display_name": {
+              "type": "string",
+              "examples": ["Good health and well-being"]
+            },
+            "score": {
+              "type": "number",
+              "examples": [0.95]
+            }
+          },
+          "required": ["id", "display_name", "score"]
+        }
+      },
+      "referenced_works": {
+        "type": "array",
+        "description": "OpenAlex IDs for works that this work cites",
+        "items": {
+          "type": "string",
+          "examples": ["https://openalex.org/W2753353163"]
+        }
+      },
+      "related_works": {
+        "type": "array",
+        "description": "OpenAlex IDs for works related to this work",
+        "items": {
+          "type": "string",
+          "examples": ["https://openalex.org/W2753353163"]
+        }
+      },
+      "citation_normalized_percentile": {
+        "type": "object",
+        "description": "The percentile of this work's citation count normalized by work type, publication year, and subfield",
+        "properties": {
+          "value": {
+            "type": "number",
+            "examples": [0.999948]
+          },
+          "is_in_top_1_percent": {
+            "type": "boolean"
+          },
+          "is_in_top_10_percent": {
+            "type": "boolean"
+          }
+        },
+        "required": ["value"]
+      },
+      "language": {
+        "type": "string",
+        "description": "The language of the work in ISO 639-1 format",
+        "examples": ["en"]
+      },
+      "indexed_in": {
+        "type": "array",
+        "description": "The sources this work is indexed in",
+        "items": {
+          "type": "string",
+          "enum": ["arxiv", "crossref", "doaj", "pubmed"],
+          "examples": ["arxiv", "crossref", "pubmed"]
+        }
+      },
+      "grants": {
+        "type": "array",
+        "description": "List of grant objects, which include the Funder and the award ID, if available",
+        "items": {
+          "type": "object",
+          "properties": {
+            "funder": {
+              "type": "string",
+              "examples": ["https://openalex.org/F4320306076"]
+            },
+            "funder_display_name": {
+              "type": "string",
+              "examples": ["National Science Foundation"]
+            },
+            "award_id": {
+              "type": ["string", "null"],
+              "examples": ["ABI 1661218"]
+            }
+          },
+          "required": ["funder", "funder_display_name"]
+        }
+      },
+      "fwci": {
+        "type": "number",
+        "description": "The Field-weighted Citation Impact (FWCI)",
+        "examples": [76.992]
+      },
+      "counts_by_year": {
+        "type": "array",
+        "description": "Works.cited_by_count for each of the last ten years, binned by year",
+        "items": {
+          "type": "object",
+          "properties": {
+            "year": {
+              "type": "integer",
+              "examples": [2022]
+            },
+            "cited_by_count": {
+              "type": "integer",
+              "examples": [8]
+            }
+          },
+          "required": ["year", "cited_by_count"]
+        }
+      },
+      "ids": {
+        "type": "object",
+        "description": "All the external identifiers that we know about for this work",
+        "properties": {
+          "openalex": {
+            "type": "string",
+            "examples": ["https://openalex.org/W2741809807"]
+          },
+          "doi": {
+            "type": "string",
+            "examples": ["https://doi.org/10.7717/peerj.4375"]
+          },
+          "mag": {
+            "type": "integer",
+            "examples": [2741809807]
+          },
+          "pmid": {
+            "type": "string",
+            "examples": ["https://pubmed.ncbi.nlm.nih.gov/29456894"]
+          },
+          "pmcid": {
+            "type": "string"
+          }
+        }
+      },
+      "created_date": {
+        "type": "string",
+        "format": "date",
+        "description": "The date this Work object was created in the OpenAlex dataset",
+        "examples": ["2017-08-08"]
+      },
+      "updated_date": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The last time anything in this Work object changed",
+        "examples": ["2022-01-02T00:22:35.180390"]
+      }
+    },
+    "required": [
+      "id", 
+      "title",
+      "display_name", 
+      "publication_year",
+      "type",
+      "open_access",
+      "authorships", 
+      "cited_by_count",
+      "concepts",
+      "locations",
+      "ids",
+      "created_date",
+      "updated_date"
+    ]
+  }

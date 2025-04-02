@@ -7,11 +7,16 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "jsx": "react",
     "paths": {
-      "@/*": ["./src/*"]
+        "@/*": ["./src/*"],
+        "@sesameflow": ["./src/components/index"], 
+        "@flow": ["./src/flow"],
+        "@flowcore": ["./src/flow/core"],
+        "@flowstate": ["./src/flow/stores/state-store"]
     }
   }
 }

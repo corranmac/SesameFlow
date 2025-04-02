@@ -1,18 +1,18 @@
 import { Outlet, Link } from "react-router-dom";
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const MenuLinks = ({ isMobile = false, toggleMenu }) => {
+
   return (
     <ul
-      className={`flex ${
-        isMobile ? "flex-col space-y-2" : "flex-row space-x-4"
-      }`}
+      className={`flex ${isMobile ? "flex-col space-y-2" : "flex-row space-x-6"}`}
     >
       <li>
         <Link
           onClick={toggleMenu}
           to="/"
-          className="block px-3 py-2 rounded-md text-black hover:bg-blue-200"
+          className="block px-4 py-2 rounded-md text-gray-900 hover:bg-gray-200 transition duration-300"
         >
           Home
         </Link>
@@ -21,7 +21,7 @@ const MenuLinks = ({ isMobile = false, toggleMenu }) => {
         <Link
           onClick={toggleMenu}
           to="/flow"
-          className="block px-3 py-2 rounded-md text-black hover:bg-blue-200"
+          className="block px-4 py-2 rounded-md text-gray-900 hover:bg-gray-200 transition duration-300"
         >
           Flow
         </Link>
@@ -30,7 +30,7 @@ const MenuLinks = ({ isMobile = false, toggleMenu }) => {
         <Link
           onClick={toggleMenu}
           to="/tester"
-          className="block px-3 py-2 rounded-md text-black hover:bg-blue-200"
+          className="block px-4 py-2 rounded-md text-gray-900 hover:bg-gray-200 transition duration-300"
         >
           Data
         </Link>
@@ -41,8 +41,8 @@ const MenuLinks = ({ isMobile = false, toggleMenu }) => {
 
 const NavBarContainer = ({ children }) => {
   return (
-    <nav className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16">
           {children}
         </div>
@@ -55,7 +55,7 @@ const MenuToggle = ({ toggle, isOpen }) => {
   return (
     <button
       onClick={toggle}
-      className="md:hidden p-2 text-black focus:outline-none"
+      className="md:hidden p-2 text-gray-900 focus:outline-none"
       aria-label="Toggle Menu"
     >
       {isOpen ? (
@@ -101,11 +101,11 @@ const NavBar = (props) => {
     <div>
       <NavBarContainer {...props}>
         {/* Logo / Title */}
-        <div className="flex-shrink-0">
-          <Link to="/" className="text-black text-xl font-bold">
-            Sesame Flow
-          </Link>
-        </div>
+    <div className="flex-shrink-0">
+      <Link to="/" className="text-gray-900 font-serif font-bold text-xl">
+        Sesame
+      </Link>
+    </div>
         {/* Desktop Menu */}
         <div className="hidden md:block">
           <MenuLinks />
@@ -117,7 +117,7 @@ const NavBar = (props) => {
       </NavBarContainer>
       {/* Mobile Menu Links */}
       {isOpen && (
-        <div className="md:hidden px-4 pb-4">
+        <div className="md:hidden px-6 pb-6 bg-gray-100">
           <MenuLinks isMobile={true} toggleMenu={closeMenu} />
         </div>
       )}

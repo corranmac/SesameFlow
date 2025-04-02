@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "baseUrl": ".",
-      "paths": {
-        "@/*": [
-          "./src/*"
-        ]
-      }
-      // ...
-    }
+  "compilerOptions": {
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@sesameflow": ["./src/components/index"], 
+      "@flow": ["./src/flow"],
+      "@flowcore": ["./src/flow/core"],
+      "@flowstate": ["./src/flow/stores/state-store"]
   }
-  
+  }
+}

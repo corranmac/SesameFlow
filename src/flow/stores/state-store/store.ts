@@ -40,7 +40,8 @@ type FlowStore = {
   flows: Record<string, FlowState>;
   currentFlowId: string;
   flowMetadata:{ [key: string]: any };
-  
+  nodeTypes: any;
+
   createFlow: (flowId: string, metadata: { [key: string]: any }, nodes, edges) => void;
   setCurrentFlow: (flowId: string) => void;
   renameCurrentFlow: (newName: string) => void;
@@ -62,7 +63,7 @@ type FlowStore = {
   currentFlow: () => FlowState | null; // Getter function
 };
 
-const initialViewport: Viewport = { x: 0, y: 0, zoom: 1 };
+const initialViewport: Viewport = { x: 0, y: 0, zoom: 0.5 };
 
 const useStore = create<FlowStore>()(
   persist(
@@ -70,6 +71,7 @@ const useStore = create<FlowStore>()(
       flows: {}, 
       flowMetadata: {},
       currentFlowId: '',
+      nodeTypes: {},
 
       createFlow: (flowId: string, metadata: { [key: string]: any }, nodes, edges) => {
         set((state) => ({
@@ -103,6 +105,10 @@ const useStore = create<FlowStore>()(
         if (get().flows[flowId]) {
           set({ currentFlowId: flowId });
         }
+      },
+
+      updateNodeTypes: (nodeTypes) => {
+          set({ nodeTypes: nodeTypes });
       },
 
       renameCurrentFlow: (newName: string) => {
@@ -193,6 +199,20 @@ const useStore = create<FlowStore>()(
         if (!flows[currentFlowId]) return;
         set({
           flows: { ...flows, [currentFlowId]: { ...flows[currentFlowId], edges } },
+        });
+      },
+
+      addEdge: (newEdge) => {
+        const { currentFlowId, flows } = get();
+        if (!flows[currentFlowId]) return;
+        set({
+          flows: {
+            ...flows,
+            [currentFlowId]: {
+              ...flows[currentFlowId],
+              edges: addEdge({ ...newEdge, type: 'smoothstep' }, flows[currentFlowId].edges),
+            },
+          },
         });
       },
 
@@ -296,7 +316,7 @@ const useStore = create<FlowStore>()(
   )
 );
 
-const selector = (state) => ({
+export const selector = (state) => ({
   flows: state.flows,
   currentFlowId: state.currentFlowId,
   flowMetadata: state.flowMetadata,
@@ -310,9 +330,15 @@ const selector = (state) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
   addNode: state.addNode,
+  updateNodePosition: state.updateNodePosition,
+  addEdge: state.addEdge,
   setViewport: state.setViewport,
   clearStore: state.clearStore,
-  updateNodeData: state.updateNodeData
+  updateNodeData: state.updateNodeData,
+  updateNodeTypes: state.updateNodeTypes,
+  nodeTypes: state.nodeTypes,
+  setNodes: state.setNodes,
+  setEdges: state.setEdges
 });
 
 const nodeSelector = (state) => ({
@@ -323,8 +349,14 @@ const nodeSelector = (state) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
   addNode: state.addNode,
+  updateNodePosition: state.updateNodePosition,
+  addEdge: state.addEdge,
   setViewport: state.setViewport,
-  updateNodeData: state.updateNodeData
+  updateNodeData: state.updateNodeData,
+  updateNodeTypes: state.updateNodeTypes,
+  nodeTypes: state.nodeTypes,
+  setNodes: state.setNodes,
+  setEdges: state.setEdges
 });
 
 const useFlowStore = () => {
