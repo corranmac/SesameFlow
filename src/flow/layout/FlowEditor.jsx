@@ -24,7 +24,7 @@ import {
 
 import { nanoid } from "nanoid";
 
-import { nodeCreationContext } from "@flowcore/utils/nodecontext";
+import { nodeCreationContext } from "@flowcore/utils/nodeContext";
 
 import useFlowStore from "@flowstate/store";
 import { NodeMenu } from "@flow/layout/NodeMenu";
