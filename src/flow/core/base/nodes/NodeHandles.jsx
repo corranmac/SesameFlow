@@ -8,7 +8,7 @@ import classNames from "clsx";
 
 const CreationMenu = ({ nodeTypes,recentNodeTypes, handlePosition, createNode }) => {
   const [activeTab, setActiveTab] = useState("favorites");
-  const favouriteNodeTypes = ["OpenAlex-sink", "Search Fields", "Open Access", "Publication", "Authorship", "Concepts"];
+  const favouriteNodeTypes = ["OA-sink", "Search Fields", "Open Access", "Publication", "Authorship", "Concepts"];
   let nodetypes = nodeTypes.slice(10) ?? []
   return (
     <Tabs.Root value={activeTab} onValueChange={(e) => setActiveTab(e.value)} className="mh-60 w-30 translate-x-1/2" >

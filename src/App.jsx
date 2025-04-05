@@ -3,7 +3,7 @@ import Homepage from "@/app/Homepage"
 import NavBar from "@/layout/Navbar";
 import Tester from "@/dexie-test/tester"
 
-import { BrowserRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const ConditionalNavBar = ({children}) =>{
@@ -25,7 +25,7 @@ const ConditionalNavBar = ({children}) =>{
 export default function App() {
   return (
     <div className="main">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<ConditionalNavBar />}>
             <Route index element={<Homepage/>} />
@@ -34,7 +34,7 @@ export default function App() {
             <Route path="tester" element={<Tester />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
       </div>
   );
 }

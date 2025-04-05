@@ -21,7 +21,7 @@ async function registerCoreNodes() {
         console.warn(`Skipping invalid core node module: ${path}`);
         continue;
       }
-      registerNodeType(component.source+"-"+component.label, component || {});
+      registerNodeType(component.source_short+"-"+component.label, component || {});
       continue;
     }
 

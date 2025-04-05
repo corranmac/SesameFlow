@@ -29,7 +29,7 @@ const FlowManagerContext = createContext({
 const initialNodes = [
   {
     id: "0",
-    type: "OpenAlex-base_term",
+    type: "OA-base_term",
     position: { x: 1091, y: 150 },
     data: {},
   }

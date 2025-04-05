@@ -29,6 +29,7 @@ const BaseTerm = ({ id,data }) => {
 
 // Define the node type
 BaseTerm.source = 'OpenAlex';
+BaseTerm.source_short = 'OA';
 BaseTerm.group = 'Repository';
 BaseTerm.label = 'base_term';
 BaseTerm.type = 'Input';

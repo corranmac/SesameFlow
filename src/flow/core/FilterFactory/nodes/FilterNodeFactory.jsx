@@ -1,7 +1,7 @@
 import { useMemo,memo,useCallback,useState,useEffect } from "react";
 import { filterTypes } from "./filters";
 import useFlowStore from '@flowstate/store';
-import BasicNode from "@flowcore/nodes/Base/Filter"
+import BasicNode from "@flowcore/base/nodes/FilterType"
 import { useNodesData } from '@xyflow/react';
 
 const BooleanInput = ({id, data}) =>{
@@ -184,7 +184,8 @@ export const factory = () => {
     );
 
     return {
-      source: "Core",
+      source: "OpenAlex",
+      source_short: 'OA',
       group: "Repository",
       type: "Input",
       label: filterType,

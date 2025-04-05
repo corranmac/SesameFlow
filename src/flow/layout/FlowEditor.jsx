@@ -54,6 +54,8 @@ export const FlowEditor = ({ nodesIn, edgesIn, ...props }) => {
 
   useMemo(() => updateNodeTypes(Object.keys(initialNodeTypes)), []);
 
+  console.log(initialNodeTypes);
+
   const nodes = nodesIn;
   const edges = edgesIn;
 
@@ -151,12 +153,12 @@ export const FlowEditor = ({ nodesIn, edgesIn, ...props }) => {
             onConnect={onConnect}
             nodeOrigin={[0.5, 0.5]}
             snapToGrid
-            snapGrid={[16, 16]}
+            snapGrid={[8, 8]}
             minZoom={0.2}
             connectionLineType={"smoothstep"}
           >
             <Controls />
-            <Background gap={16} />
+            <Background gap={8} />
           </ReactFlow>
         </nodeCreationContext.Provider>
       </div>

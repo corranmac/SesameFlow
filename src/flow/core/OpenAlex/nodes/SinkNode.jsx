@@ -114,6 +114,7 @@ const SinkNode = ({ id }) => {
 
 // Define the node type
 SinkNode.source = 'OpenAlex';
+SinkNode.source_short = 'OA';
 SinkNode.group = 'Repository';
 SinkNode.label = 'sink';
 SinkNode.type = 'Computation';
