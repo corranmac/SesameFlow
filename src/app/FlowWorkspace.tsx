@@ -6,16 +6,27 @@ import React, {
   useState,
   useMemo,
 } from "react";
-import useFlowStore, {selector} from "@flowstate/store";
+import useFlowStore, { selector } from "@flowstate/store";
 import Workspace from "@flow/Workspace";
-import { Card, ProjectCard, FlowDeleteDialogue, Dialog } from "@sesameflow";
+import { Card, Dialog } from "@sesameflow";
+import { ProjectCard, FlowDeleteDialogue } from "@/layout";
 import { useShallow } from "zustand/react/shallow";
 import { nanoid } from "nanoid";
-import { useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-// Create the context to ensure only the current flow can be
-// accessed outside of the Flow Workspace
-const FlowManagerContext = createContext({
+// Types for context and flow manager
+interface FlowManagerContextType {
+  isParent: boolean;
+  loadFlow: (flowID: string) => void;
+  createFlow: (metadata: { name: string; description: string }) => void;
+  deleteFlow: (flowID: string) => void;
+  updateFlowMetadata: (metadata: { name: string; description: string }) => void;
+  currentFlow: null | string;
+  flowVisible: boolean;
+  flowMetadata: Record<string, { name: string; description: string }>;
+}
+
+const FlowManagerContext = createContext<FlowManagerContextType>({
   isParent: false,
   loadFlow: () => {},
   createFlow: () => {},
@@ -29,29 +40,33 @@ const FlowManagerContext = createContext({
 const initialNodes = [
   {
     id: "0",
-    type: "OA-base_term",
+    type: "OpenAlex-base_term",
     position: { x: 1091, y: 150 },
     data: {},
-  }
+  },
 ];
 
-
+interface FlowCreateDialogProps {
+  useCreateFlow: (metadata: { name: string; description: string }) => void;
+  showAddDialogue: boolean;
+  setShowAddDialogue: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const FlowCreateDialog = ({
   useCreateFlow,
   showAddDialogue,
   setShowAddDialogue,
-}) => {
-  const [flowName, setFlowName] = useState("");
-  const [flowDescription, setFlowDescription] = useState("");
+}:FlowCreateDialogProps) => {
+  const [flowName, setFlowName] = useState<string>("");
+  const [flowDescription, setFlowDescription] = useState<string>("");
 
   const handleCreate = useCallback(
-    (name, description) => {
+    (name: string, description: string) => {
       let metadata = { name: name, description: description };
       useCreateFlow(metadata);
-      setFlowName("")
-      setFlowDescription("")
-      setShowAddDialogue(false)
+      setFlowName("");
+      setFlowDescription("");
+      setShowAddDialogue(false);
     },
     [useCreateFlow]
   );
@@ -104,20 +119,27 @@ const FlowCreateDialog = ({
   );
 };
 
+interface WorkSpaceEditorProps {
+  useCreateFlow: (metadata: { name: string; description: string }) => void;
+  useDeleteFlow: (flowID: string) => void;
+  loadFlow: (flowID: string) => void;
+  flowMetadata: Record<string, { name: string; description: string }>;
+}
+
 const WorkSpaceEditor = ({
   useCreateFlow,
   useDeleteFlow,
   loadFlow,
   flowMetadata,
-}) => {
-  const [showDelDialogue, setShowDelDialogue] = useState(false);
-  const [showAddDialogue, setShowAddDialogue] = useState(false);
-  const [flowForDel, setFlowForDel] = useState("");
+}:WorkSpaceEditorProps) => {
+  const [showDelDialogue, setShowDelDialogue] = useState<boolean>(false);
+  const [showAddDialogue, setShowAddDialogue] = useState<boolean>(false);
+  const [flowForDel, setFlowForDel] = useState<string>("");
 
-  const handleShowDelDialog = useCallback((flowId) => {
+  const handleShowDelDialog = useCallback((flowId: string) => {
     setFlowForDel(flowId);
     setShowDelDialogue(true);
-  });
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-5 m-5 ">
@@ -166,9 +188,8 @@ const WorkSpaceEditor = ({
   );
 };
 
-
 export const FlowWorkspace = React.memo(() => {
-  const [flowVisible, setFlowVisible] = useState(false);
+  const [flowVisible, setFlowVisible] = useState<boolean>(false);
 
   const {
     flows,
@@ -186,7 +207,7 @@ export const FlowWorkspace = React.memo(() => {
     () => flows[currentFlowId]?.nodes ?? [],
     [flows, currentFlowId]
   );
-  
+
   const edges = useMemo(
     () => flows[currentFlowId]?.edges ?? [],
     [flows, currentFlowId]
@@ -197,28 +218,28 @@ export const FlowWorkspace = React.memo(() => {
     [flowMetadata, currentFlowId]
   );
 
-  const loadFlow = (flowID)=>{
+  const loadFlow = (flowID: string) => {
     setCurrentFlow(flowID);
-    navigate("/flow/"+flowID);
-  }
+    navigate("/flow/" + flowID);
+  };
 
-  const useCreateFlow = (metadata) => {
+  const useCreateFlow = (metadata: { name: string; description: string }) => {
     let flowID = nanoid();
     createFlow(flowID, metadata, initialNodes, []);
   };
 
-  const useDeleteFlow = (flowID) => {
+  const useDeleteFlow = (flowID: string) => {
     deleteFlow(flowID);
   };
 
-  const navigate = useNavigate()
-  const { routeFlowId } = useParams();
+  const navigate = useNavigate();
+  const { routeFlowId } = useParams<{ routeFlowId: string }>();
 
   useEffect(() => {
-    if (routeFlowId){
+    if (routeFlowId) {
       setCurrentFlow(routeFlowId);
-      setFlowVisible(true)}
-    else{
+      setFlowVisible(true);
+    } else {
       setCurrentFlow(null);
       setFlowVisible(false);
     }
@@ -226,16 +247,21 @@ export const FlowWorkspace = React.memo(() => {
 
   return (
     <div className="flex flex-col px-0 py-2 mb-20 gap-2 overflow-y-hidden">
-        {!flowVisible && 
-        <WorkSpaceEditor useCreateFlow={useCreateFlow} useDeleteFlow={useDeleteFlow} loadFlow={loadFlow} flowMetadata={flowMetadata}/>
-        }
-        <FlowManagerContext.Provider value={{ isParent: true }}>
-            {flowVisible && (
-               <Workspace nodes={nodes} edges={edges} currentFlowMetadata={currentFlowMetadata}/>
-            )}
-        </FlowManagerContext.Provider>
+      {!flowVisible && (
+        <WorkSpaceEditor
+          useCreateFlow={useCreateFlow}
+          useDeleteFlow={useDeleteFlow}
+          loadFlow={loadFlow}
+          flowMetadata={flowMetadata}
+        />
+      )}
+      <FlowManagerContext.Provider value={{ isParent: true }}>
+        {flowVisible && (
+          <Workspace nodes={nodes} edges={edges} currentFlowMetadata={currentFlowMetadata} />
+        )}
+      </FlowManagerContext.Provider>
     </div>
-);
+  );
 });
 
 // Custom hook to access the context

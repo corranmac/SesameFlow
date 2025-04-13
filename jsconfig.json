@@ -1,14 +1,15 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "Node",
-        "target": "ES2020",
-        "jsx": "react",
-        "strictNullChecks": true,
-        "strictFunctionTypes": true
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"],
+        "@sesameflow": ["src/components"],
+        "@flow": ["src/flow/*"],
+        "@flowcore": ["src/flow/core"],
+        "@flowstate": ["src/flow/stores/state-store"]
+      }
     },
-    "exclude": [
-        "node_modules",
-        "**/node_modules/*"
-    ]
-}
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
+  }
+  

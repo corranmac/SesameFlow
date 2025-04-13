@@ -1,49 +1,65 @@
-// src/registry/NodeRegistry.jsx
+// src/registry/NodeRegistry.ts
 
 const STORAGE_KEY = 'nodeRegistry';
 
-// In-memory registry: holds both the React component and the node configuration.
-const nodeRegistry = {};
+export interface NodeConfig {
+  [key: string]: any;
+}
+
+export interface NodeComponent {
+  name?: string;
+  source_short?: string;
+  source?: string;
+  label?: string;
+  component?: React.ComponentType<any>;
+  measured?: {
+    width: number;
+    height: number;
+  };
+}
+
+interface RegistryEntry {
+  component: React.ComponentType<any>;
+  config: NodeConfig;
+}
+
+// In-memory registry
+const nodeRegistry: Record<string, RegistryEntry> = {};
 
 /**
  * Dynamically imports all node components from /src/core/nodes/
  */
-async function registerCoreNodes() {
-  const modules = import.meta.glob('@flowcore/**/nodes/*{Node,Factory}.jsx', { eager: true });
-
+async function registerCoreNodes(): Promise<void> {
+  const modules = import.meta.glob<{ default?: NodeComponent; factory?: () => NodeComponent[] }>(
+    '@flowcore/**/nodes/*{Node,Factory}.*sx',  // Ensure it's .tsx for TypeScript/JSX
+    { eager: true }
+  );
   for (const path in modules) {
     const module = modules[path];
 
-    // Core Nodes: Default Exported Components
     if (module.default) {
       const component = module.default;
       if (!component.name) {
         console.warn(`Skipping invalid core node module: ${path}`);
         continue;
       }
-      registerNodeType(component.source_short+"-"+component.label, component || {});
+      registerNodeType(`${component.source}-${component.label}`, component);
       continue;
     }
 
-    // Factory Nodes: Explicitly Exported Factory Function
-    if (module.factory) {
-      if (typeof module.factory !== 'function') {
-        console.warn(`Skipping invalid factory in ${path}`);
-        continue;
-      }
-
-      const nodes = module.factory(); // Factory returns multiple nodes
+    if (module.factory && typeof module.factory === 'function') {
+      const nodes = module.factory();
       if (!Array.isArray(nodes)) {
         console.warn(`Factory in ${path} did not return an array of nodes.`);
         continue;
       }
 
       nodes.forEach((node) => {
-        if (!node || !node.label) {
+        if (!node || !node.label || !node.component) {
           console.warn(`Skipping invalid node in factory from ${path}`);
           return;
         }
-        registerNodeType(node.source+"-"+node.label, node.component || {});
+        registerNodeType(`${node.source}-${node.label}`, node.component);
       });
     }
   }
@@ -52,11 +68,11 @@ async function registerCoreNodes() {
 /**
  * Loads the registry configuration from local storage.
  */
-function loadRegistryFromStorage() {
+function loadRegistryFromStorage(): void {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try {
-      const parsed = JSON.parse(stored);
+      const parsed: Record<string, NodeConfig> = JSON.parse(stored);
       Object.keys(parsed).forEach((label) => {
         if (nodeRegistry[label]) {
           nodeRegistry[label].config = parsed[label];
@@ -71,8 +87,8 @@ function loadRegistryFromStorage() {
 /**
  * Saves the serializable configuration from the registry to local storage.
  */
-function saveRegistryToStorage() {
-  const serializableRegistry = {};
+function saveRegistryToStorage(): void {
+  const serializableRegistry: Record<string, NodeConfig> = {};
   Object.keys(nodeRegistry).forEach((label) => {
     serializableRegistry[label] = nodeRegistry[label].config;
   });
@@ -86,12 +102,12 @@ function saveRegistryToStorage() {
 
 /**
  * Registers a custom node label.
- *
- * @param {string} label - A unique identifier for the node label.
- * @param {React.Component} component - The React component for this node label.
- * @param {Object} [config={}] - Optional configuration data for the node.
  */
-export function registerNodeType(label, component, config = {}) {
+export function registerNodeType(
+  label: string,
+  component: React.ComponentType<any>,
+  config: NodeConfig = {}
+): void {
   if (nodeRegistry[label]) {
     nodeRegistry[label].config = { ...nodeRegistry[label].config, ...config };
     nodeRegistry[label].component = component;
@@ -104,8 +120,8 @@ export function registerNodeType(label, component, config = {}) {
 /**
  * Returns an object mapping node label identifiers to their React components.
  */
-export function getRegisteredNodeTypes() {
-  const nodeTypes = {};
+export function getRegisteredNodeTypes(): Record<string, React.ComponentType<any>> {
+  const nodeTypes: Record<string, React.ComponentType<any>> = {};
   Object.keys(nodeRegistry).forEach((label) => {
     nodeTypes[label] = nodeRegistry[label].component;
   });
@@ -115,8 +131,8 @@ export function getRegisteredNodeTypes() {
 /**
  * Serializes the registry's configuration into a JSON string.
  */
-export function serializeRegistry() {
-  const serializableRegistry = {};
+export function serializeRegistry(): string {
+  const serializableRegistry: Record<string, NodeConfig> = {};
   Object.keys(nodeRegistry).forEach((label) => {
     serializableRegistry[label] = nodeRegistry[label].config;
   });
@@ -126,9 +142,9 @@ export function serializeRegistry() {
 /**
  * Allows exporting the registry's configuration as a JSON file.
  */
-export function exportRegistryToFile() {
+export function exportRegistryToFile(): void {
   const dataStr = serializeRegistry();
-  const blob = new Blob([dataStr], { label: 'application/json' });
+  const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -140,12 +156,15 @@ export function exportRegistryToFile() {
 /**
  * Imports registry configuration from a JSON string.
  */
-export function importRegistryFromJson(jsonString) {
+export function importRegistryFromJson(jsonString: string): void {
   try {
-    const importedConfig = JSON.parse(jsonString);
+    const importedConfig: Record<string, NodeConfig> = JSON.parse(jsonString);
     Object.keys(importedConfig).forEach((label) => {
       if (nodeRegistry[label]) {
-        nodeRegistry[label].config = { ...nodeRegistry[label].config, ...importedConfig[label] };
+        nodeRegistry[label].config = {
+          ...nodeRegistry[label].config,
+          ...importedConfig[label],
+        };
       } else {
         console.warn(`Configuration for unregistered node label "${label}" imported.`);
       }
@@ -159,7 +178,7 @@ export function importRegistryFromJson(jsonString) {
 /**
  * Initializes the registry by loading stored configurations and registering core nodes.
  */
-export async function loadRegistry() {
+export async function loadRegistry(): Promise<void> {
   loadRegistryFromStorage();
   await registerCoreNodes();
 }

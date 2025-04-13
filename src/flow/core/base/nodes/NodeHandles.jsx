@@ -5,40 +5,10 @@ import { Portal } from '@ark-ui/react/portal';
 import { Tabs } from '@ark-ui/react/tabs';
 import { MdHistory, MdStar } from "react-icons/md";
 import classNames from "clsx";
-
-const CreationMenu = ({ nodeTypes,recentNodeTypes, handlePosition, createNode }) => {
-  const [activeTab, setActiveTab] = useState("favorites");
-  const favouriteNodeTypes = ["OA-sink", "Search Fields", "Open Access", "Publication", "Authorship", "Concepts"];
-  let nodetypes = nodeTypes.slice(10) ?? []
-  return (
-    <Tabs.Root value={activeTab} onValueChange={(e) => setActiveTab(e.value)} className="mh-60 w-30 translate-x-1/2" >
-      <Tabs.List className="flex stretch">
-        <Tabs.Trigger value="favorites" className={`tabTrigger ${activeTab === "favorites" ? "bg-gray-50" : "!bg-gray-200"}`}>
-          <MdStar className="w-3 h-3" />
-        </Tabs.Trigger>
-        <Tabs.Trigger value="recent" className={`tabTrigger ${activeTab === "recent" ? "bg-gray-50" : "!bg-gray-200"}`}>
-          <MdHistory className="w-3 h-3" />
-        </Tabs.Trigger>
-      </Tabs.List>
-      <Tabs.Content value="recent" className="tabContent !height-[20px]">
-        {nodetypes.map((nodeType, index) => (
-          <div onClick={() => createNode(handlePosition, nodeType)} key={index} className="hover:bg-white p-1 cursor-pointer">
-            {nodeType}
-          </div>
-        ))}
-      </Tabs.Content>
-      <Tabs.Content value="favorites" className="tabContent !height-[20px]">
-        {favouriteNodeTypes.map((nodeType, index) => (
-          <div onClick={() => createNode(handlePosition, nodeType)} key={index} className="hover:bg-white p-1 cursor-pointer">
-            {nodeType}
-          </div>
-        ))}
-      </Tabs.Content>
-    </Tabs.Root>
-  );
-};
+import NodeCreationMenu from '@flowcore/base/layout/NodeCreationMenu';
 
 export const HoverComponent = ({ children, handlePosition, createNode, recentNodeTypes,nodeTypes }) => (
+  
   <HoverCard.Root>
     <HoverCard.Trigger>{children}</HoverCard.Trigger>
     <Portal>
@@ -47,7 +17,7 @@ export const HoverComponent = ({ children, handlePosition, createNode, recentNod
           <HoverCard.Arrow>
             <HoverCard.ArrowTip />
           </HoverCard.Arrow>
-            <CreationMenu handlePosition={handlePosition} createNode={createNode} recentNodeTypes={recentNodeTypes} nodeTypes={nodeTypes} />
+            <NodeCreationMenu handlePosition={handlePosition} createNode={createNode} recentNodeTypes={recentNodeTypes} nodeTypes={nodeTypes} />
         </HoverCard.Content>
       </HoverCard.Positioner>
     </Portal>

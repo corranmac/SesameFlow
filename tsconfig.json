@@ -1,22 +1,25 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "jsx": "react",
+    "target": "esnext",                            // Vite supports modern features, so use esnext
+    "module": "esnext",                            // Use esnext modules for better tree-shaking and module compatibility
+    "moduleResolution": "node",                    // Standard Node.js module resolution
+    "jsx": "react-jsx",                           // Supports JSX syntax for React (React 17+)
+    "esModuleInterop": true,                       // Compatibility with CommonJS modules
+    "strict": true,                                // Enable strict type-checking options
+    "noEmit": true,                                // Don't emit compiled JS files (Vite handles the bundling)
+    "forceConsistentCasingInFileNames": true,      // Ensures consistent file casing
+    "skipLibCheck": true,                          // Skips checking library types for faster compilation
+    "resolveJsonModule": true,                     // Allows importing JSON files as modules
+    "isolatedModules": true,                       // Ensures that each file is treated as an isolated module (required for Vite)
+    "baseUrl": ".",                                // Ensures path resolution from the root
     "paths": {
-        "@/*": ["./src/*"],
-        "@sesameflow": ["./src/components/index"], 
-        "@flow": ["./src/flow"],
-        "@flowcore": ["./src/flow/core"],
-        "@flowstate": ["./src/flow/stores/state-store"]
+      "@/*": ["src/*"],
+      "@sesameflow/*": ["src/components"],
+      "@flow/*": ["src/flow/*"],
+      "@flowcore/*": ["src/flow/core"],
+      "@flowstate/*": ["src/flow/stores/state-store"]
     }
-  }
+  },
+  "include": ["src/**/*"],                         // Include all source files
+  "exclude": ["node_modules", "dist"]              // Exclude node_modules and dist from the compilation
 }

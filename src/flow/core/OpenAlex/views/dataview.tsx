@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { MdExpandMore, MdOutlineExpandMore } from "react-icons/md";
 import { useDatabase } from "@/dexie-test/DataCiteStore";
+import {convertToDataCiteXML} from "@/dexie-test/utils"
+import {dcMetadata_4_6} from "@flowcore/DataCite/types"
 
 import {
   createColumnHelper,
@@ -14,7 +16,12 @@ import { IoIosArrowDown } from "react-icons/io";
 
 const columnHelper = createColumnHelper();
 
-const TableNav = ({table,pagination}) =>{
+interface TableNavProps {
+    table: any;
+    pagination: any;
+}
+
+const TableNav= ({table,pagination}:TableNavProps) =>{
   return(
     <div className="flex flex-row align-items-end">
         <button
@@ -83,13 +90,15 @@ const TableNav = ({table,pagination}) =>{
 }
 
 export const DataView = () => {
-  const { db, isLoading } = useDatabase();
-  const [articles, setArticles] = useState([]);
+  const { db, isLoading } = useDatabase("flow1");
+  const [articles, setArticles] = useState<dcMetadata_4_6>([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
   });
+
+  console.log(articles[0])
 
   useEffect(() => {
     if (db?.metadata) {
@@ -115,7 +124,7 @@ export const DataView = () => {
           </button>
         ),
       }),
-      columnHelper.accessor("Titles", {
+      columnHelper.accessor("titles", {
         header: "Title",
         cell: (info) => (
           <div className="!max-w-[300px]">
@@ -123,7 +132,7 @@ export const DataView = () => {
           </div>
         ),
       }),
-      columnHelper.accessor("Creators", {
+      columnHelper.accessor("creators", {
         header: "Authors",
         cell: (info) => (
           <div className="!max-w-[300px]">
@@ -134,7 +143,7 @@ export const DataView = () => {
           </div>
         ),
       }),
-      columnHelper.accessor("PublicationYear", {
+      columnHelper.accessor("publicationYear", {
         header: "Pub_Year",
         cell: (info) => (
           <div className="!max-w-[30px] !text-center items-center">
@@ -142,7 +151,7 @@ export const DataView = () => {
           </div>
         ),
       }),
-      columnHelper.accessor("Publisher", {
+      columnHelper.accessor("publisher", {
         header: "Publisher",
         cell: (info) => (
           <div className="!max-w-[200px]">
@@ -153,6 +162,10 @@ export const DataView = () => {
     ],
     [expandedRow]
   );
+
+  function printArticle(){
+    console.log(convertToDataCiteXML(articles[0]))
+  }
 
   const table = useReactTable({
     data: articles,
@@ -170,6 +183,7 @@ export const DataView = () => {
   return (
     <>
       <div className="mt-2 !max-h-[75vh] overflow-scroll">
+        <button onClick={()=>printArticle()}>Print Article</button>
         <table className="!w-full overflow-x-scroll text-xs border-collapse border border-gray-300 table-none !h-[60vh] !min-h-[60vh] !max-h-[60vh]">
           <thead className="bg-gray-100 sticky top-0">
             {table.getHeaderGroups().map((headerGroup, index) => (

@@ -1,7 +1,7 @@
-import {crate_json} from "@flow/representation/ro-crate.ts"
+import {crate_json} from "@flow/representation/ro-crate"
 import {JsonInspector} from '@rexxars/react-json-inspector'
 
-const CrateView = ({flowName}) =>{
+const CrateView = ({ flowName }:{ flowName: string }) => {
     return(
     <div className="flex flex-col">
         <h3>RO-Crate Representation</h3>

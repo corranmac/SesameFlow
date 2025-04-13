@@ -20,6 +20,7 @@ export const Loader = ({ value=50, min = 0, max = 100, label = 'Progress' }) => 
     );
   };
 
+  
 const SinkNode = ({ id }) => {
 
     const baseQuery = "https://api.openalex.org/works?per-page=20&filter=" ///&select=id
@@ -33,7 +34,7 @@ const SinkNode = ({ id }) => {
     const [isQuerying, setIsQuerying] = useState(false)
     const [adata,setaData] = useState()
 
-    const { db, isLoading, error } = useDatabase();
+    const { db, isLoading, error } = useDatabase("flow1");
     const [dataAdded, setDataAdded] = useState(false); // Track if the data has been added
 
     const handleAddData = async (articleData) => {
@@ -92,7 +93,7 @@ const SinkNode = ({ id }) => {
 
     useEffect(()=>logArticle(),[adata])
 
-    const incomers = useMemo(()=>getAllIncomers(id,nodes,edges),[nodes,edges])
+    const incomers = useMemo(() => getAllIncomers({ id, nodes, edges }), [nodes, edges]);
 
     return (
         <BasicNode type={SinkNode.name} group={SinkNode.group} key={id}>
@@ -113,10 +114,11 @@ const SinkNode = ({ id }) => {
 };
 
 // Define the node type
-SinkNode.source = 'OpenAlex';
-SinkNode.source_short = 'OA';
-SinkNode.group = 'Repository';
 SinkNode.label = 'sink';
+SinkNode.display_label = 'Sink';
+SinkNode.source = 'OpenAlex';
+SinkNode.display_source = 'OA';
+SinkNode.group = 'Repository';
 SinkNode.type = 'Computation';
 
 

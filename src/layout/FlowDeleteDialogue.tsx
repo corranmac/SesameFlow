@@ -1,12 +1,21 @@
-import { Dialog } from '@ark-ui/react/dialog'
-import { Portal } from '@ark-ui/react/portal'
+import { Dialog } from '@ark-ui/react'
+import { Portal } from '@ark-ui/react'
 
-const FlowDeleteDialogue = ({showDialogue,setShowDialogue,onDelete,flowForDel}) => {
+
+// Define the types for FlowDeleteDialogue props
+interface FlowDeleteDialogueProps {
+  showDialogue: boolean;
+  setShowDialogue: React.Dispatch<React.SetStateAction<boolean>>;
+  onDelete: () => void;
+  flowForDel: string;
+}
+
+const FlowDeleteDialogue = ({showDialogue,setShowDialogue,onDelete,flowForDel}:FlowDeleteDialogueProps) => {
     return (
-        <Dialog.Root className="relative z-50" open={showDialogue} onOpenChange={(e) => setShowDialogue(e.open)}>
+        <Dialog.Root open={showDialogue} onOpenChange={(e) => setShowDialogue(e.open)}>
         <Portal>
           <Dialog.Backdrop className="fixed inset-0 bg-black opacity-50" />
-          <Dialog.Positioner className="fixed top-0 left-1/2 transform -translate-x-1/2 mt-10 z-50">
+          <Dialog.Positioner className="relative z-50 fixed top-0 left-1/2 transform -translate-x-1/2 mt-10 z-50">
             <Dialog.Content className="bg-white p-6 rounded-lg shadow-lg w-96">
               <Dialog.Title className="text-xl font-semibold">Delete {flowForDel}?</Dialog.Title>
               <Dialog.Description className="text-gray-700 mt-2">Are you sure you want to delete this research flow?</Dialog.Description>

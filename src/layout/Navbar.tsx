@@ -2,12 +2,15 @@ import { Outlet, Link } from "react-router-dom";
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-const MenuLinks = ({ isMobile = false, toggleMenu }) => {
+// Define the types for MenuLinks props
+interface MenuLinksProps {
+  isMobile?: boolean;
+  toggleMenu: () => void;
+}
 
+const MenuLinks = ({ isMobile = false, toggleMenu }:MenuLinksProps) => {
   return (
-    <ul
-      className={`flex ${isMobile ? "flex-col space-y-2" : "flex-row space-x-6"}`}
-    >
+    <ul className={`flex ${isMobile ? "flex-col space-y-2" : "flex-row space-x-6"}`}>
       <li>
         <Link
           onClick={toggleMenu}
@@ -39,19 +42,26 @@ const MenuLinks = ({ isMobile = false, toggleMenu }) => {
   );
 };
 
-const NavBarContainer = ({ children }) => {
+
+const NavBarContainer = ({ children }:{
+  children: React.ReactNode;
+}) => {
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-        <div className="flex items-center justify-between h-16">
-          {children}
-        </div>
+        <div className="flex items-center justify-between h-16">{children}</div>
       </div>
     </nav>
   );
 };
 
-const MenuToggle = ({ toggle, isOpen }) => {
+// Define the types for MenuToggle props
+interface MenuToggleProps {
+  toggle: () => void;
+  isOpen: boolean;
+}
+
+const MenuToggle = ({ toggle, isOpen }:MenuToggleProps) => {
   return (
     <button
       onClick={toggle}
@@ -92,8 +102,14 @@ const MenuToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavBar = (props) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+// Define the types for NavBar props
+interface NavBarProps {
+  // Any additional props you need for NavBar can go here
+}
+
+const NavBar = (props:{}) => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   const toggle = () => setIsOpen(!isOpen);
   const closeMenu = () => isOpen && setIsOpen(false);
 
@@ -101,14 +117,14 @@ const NavBar = (props) => {
     <div>
       <NavBarContainer {...props}>
         {/* Logo / Title */}
-    <div className="flex-shrink-0">
-      <Link to="/" className="text-gray-900 font-serif font-bold text-xl">
-        Sesame
-      </Link>
-    </div>
+        <div className="flex-shrink-0">
+          <Link to="/" className="text-gray-900 font-serif font-bold text-xl">
+            Sesame
+          </Link>
+        </div>
         {/* Desktop Menu */}
         <div className="hidden md:block">
-          <MenuLinks />
+          <MenuLinks toggleMenu={closeMenu} />
         </div>
         {/* Mobile Menu Toggle */}
         <div className="md:hidden">

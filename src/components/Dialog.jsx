@@ -25,7 +25,7 @@ const StyledDialog = ({
             className={`bg-white p-6 rounded-lg shadow-xl w-96 ${contentClassName}`}
           >
             {/* Dialog Title */}
-            <Dialog.Title className="text-xl font-semibold text-gray-800">{title}</Dialog.Title>
+            <Dialog.Title className="!text-xl font-semibold text-gray-800">{title}</Dialog.Title>
             
             {/* Dialog Content */}
             {children}

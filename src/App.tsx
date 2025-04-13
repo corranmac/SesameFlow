@@ -1,12 +1,12 @@
 import {FlowWorkspace} from "@/app/FlowWorkspace"
 import Homepage from "@/app/Homepage"
 import NavBar from "@/layout/Navbar";
-import Tester from "@/dexie-test/tester"
+import Tester from "@/dexie-test/tester" 
 
 import { BrowserRouter, HashRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const ConditionalNavBar = ({children}) =>{
+const ConditionalNavBar = () =>{
   const location = useLocation();
   const [navbar, setNavbar] = useState(false);
 
@@ -22,7 +22,7 @@ const ConditionalNavBar = ({children}) =>{
   );
 }
 
-export default function App() {
+const App = () => {
   return (
     <div className="main">
       <HashRouter>
@@ -39,3 +39,4 @@ export default function App() {
   );
 }
 
+export default App

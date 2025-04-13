@@ -99,7 +99,7 @@
     @apply flex w-full pb-2 !border-t-1 !border-l-1 !border-r-1 rounded-t-sm !border-gray-400 items-center gap-2 px-4 pt-2 text-gray-600 hover:text-gray-900 border-transparent
   }
   .tabContent{
-    @apply p-1 h-full !border-gray-400 bg-gray-50 !border-b-1 !border-l-1 !border-r-1 rounded-b-sm
+    @apply p-1 text-xs max-h-60 min-h-60 overflow-y-scroll overflow-x-hidden !border-gray-400 bg-gray-50 !border-b-1 !border-l-1 !border-r-1 rounded-b-sm
   }
   .paginationButton{
     @apply border p-0.5 text-sm !w-6 !h-6 leading-3

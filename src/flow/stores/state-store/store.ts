@@ -16,16 +16,10 @@ const initialEdges = [] as Edge[];
 const initialNodes = [
   {
     id: '0',
-    type: 'OpenAlex',
+    type: 'OpenAlex-base_term',
     position: { x: 0, y: 0 },
     data: { value: 123 },
-  },
-  { 
-    id: 'PZqlVzR4Y5W_m7ouhq2Q8',
-    type: 'Core',
-    data: { filter: '' },
-    position: { x: 88, y: 356 },
-  },
+  }
 ] as Node[];
 
 // Define FlowState with only data properties
@@ -36,7 +30,7 @@ type FlowState = {
 };
 
 // Define FlowStore with logic for managing flows
-type FlowStore = {
+export type FlowStore = {
   flows: Record<string, FlowState>;
   currentFlowId: string;
   flowMetadata:{ [key: string]: any };

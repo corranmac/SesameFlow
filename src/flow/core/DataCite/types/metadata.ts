@@ -2,25 +2,25 @@ import { dcRelatedItems, dcIdentifier, dcCreators, dcTitles, dcPublisher, dcPubl
 
 export type dcMetadata_4_6 = {
     id: string;
-    Identifier: dcIdentifier; //M
-    Creators: dcCreators; //M
-    Titles: dcTitles; //M
-    Publisher: dcPublisher; //M
-    PublicationYear: dcPublicationYear; //M
-    Subjects?: dcSubjects; //R
-    Contributors?: dcContributors; //R
-    Dates?: dcDates; //R
-    Language?: dcLanguage; //R
-    ResourceType: dcResourceType;
-    AlternateIdentifiers?: dcAlternateIdentifiers; //O
-    RelatedIdentifiers?: dcRelatedIdentifiers; //O
-    Sizes?: dcSizes; //O
-    Format?: dcFormat; //O
-    Version?: dcVersion; //O
-    Rights?: dcRights; //O
-    Description?: dcDescriptions; //O
-    GeoLocation?: dcGeoLocations; //R
-    FundingReferences?: dcFundingReferences; //O
-    RelatedItems?: dcRelatedItems; //O
+    identifier: dcIdentifier; //M
+    creators: dcCreators; //M
+    titles: dcTitles; //M
+    publisher: dcPublisher; //M
+    publicationYear: dcPublicationYear; //M
+    subjects?: dcSubjects; //R
+    contributors?: dcContributors; //R
+    dates?: dcDates; //R
+    language?: dcLanguage; //R
+    resourceType: dcResourceType;
+    alternateIdentifiers?: dcAlternateIdentifiers; //O
+    relatedIdentifiers?: dcRelatedIdentifiers; //O
+    sizes?: dcSizes; //O
+    format?: dcFormat; //O
+    version?: dcVersion; //O
+    rights?: dcRights; //O
+    description?: dcDescriptions; //O
+    geoLocation?: dcGeoLocations; //R
+    fundingReferences?: dcFundingReferences; //O
+    relatedItems?: dcRelatedItems; //O
 }
 

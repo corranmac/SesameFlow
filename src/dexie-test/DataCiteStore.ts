@@ -3,8 +3,6 @@ import { dcMetadata_4_6 } from "flow/plugins/data-cite/metadata";
 import { useState, useEffect } from "react";
 import Dexie, { Table } from "dexie";
 
-
-
 const contributorTypes = [
   "ContactPerson",
   "DataCollector",
@@ -174,7 +172,7 @@ const dcRXSchema = {
       type: "string",
       maxLength: 40,
     },
-    Identifier: {
+    identifier: {
       type: "object",
       properties: {
         identifier: { type: "string" },
@@ -182,7 +180,7 @@ const dcRXSchema = {
       },
       required: ["identifier"],
     },
-    Creators: {
+    creators: {
       type: "array",
       items: {
         type: "object",
@@ -218,7 +216,7 @@ const dcRXSchema = {
         required: ["name"]
       },
     },
-    Titles: {
+    titles: {
       type: "array",
       items: {
         type: "object",
@@ -233,7 +231,7 @@ const dcRXSchema = {
         required: ["title"],
       },
     },
-    Publisher: {
+    publisher: {
       type: "object",
       properties: {
         name: { type: "string" },
@@ -244,8 +242,8 @@ const dcRXSchema = {
       },
       required: ["name"],
     },
-    PublicationYear: { type: "number" },
-    Subjects: {
+    publicationYear: { type: "number" },
+    subjects: {
       type: "array",
       items: {
         type: "object",
@@ -259,7 +257,7 @@ const dcRXSchema = {
         required: ["subject"],
       },
     },
-    Contributors: {
+    contributors: {
       type: "array",
       items: {
         type: "object",
@@ -296,7 +294,7 @@ const dcRXSchema = {
         required: ["name"],
       },
     },
-    Dates: {
+    dates: {
       type:"array",
       items:{
         type: "object",
@@ -323,10 +321,10 @@ const dcRXSchema = {
         },
       },
     },
-    Language: {
+    language: {
       type: "string",
     },
-    ResourceType: {
+    resourceType: {
       type: "object",
       properties: {
         resourceTypeGeneral: { type: "string", enum: resourceTypes },
@@ -334,7 +332,7 @@ const dcRXSchema = {
       },
       required: ["resourceType", "resourceTypeGeneral"],
     },
-    AlternateIdentifiers: {
+    alternateIdentifiers: {
       type:"array",
       items:{
       type: "object",
@@ -345,7 +343,7 @@ const dcRXSchema = {
       required: ["alternateIdentifierType"],
     }
     },
-    RelatedIdentifiers: {
+    relatedIdentifiers: {
       type:"array",
       items:{
       type: "object",
@@ -360,19 +358,19 @@ const dcRXSchema = {
       required: ["relationType", "relatedIdentifier","relatedIdentifierType"],
     }
     },
-    Size: {
+    size: {
       type: "array",
       items: {
         type: "string",
       },
     },
-    Formats: {
+    formats: {
       type: "array",
       items: {
         type: "string",
       },
     },
-    Version: {
+    version: {
       type: "string",
     },
     rightsList: {
@@ -390,7 +388,7 @@ const dcRXSchema = {
         required: ["rights"],
       },
     },
-    Description: {
+    description: {
       type: "array",
       items: {
         type: "object",
@@ -412,7 +410,7 @@ const dcRXSchema = {
         required: ["description", "descriptionType"],
       },
     },
-    GeoLocation: {
+    geoLocation: {
       type: "array",
       items: {
         type: "object",
@@ -446,7 +444,7 @@ const dcRXSchema = {
         },
       },
     },
-    FundingReferences: {
+    fundingReferences: {
       type: "array",
       items: {
         type: "object",
@@ -461,7 +459,7 @@ const dcRXSchema = {
         required: ["funderName"],
       },
     },
-    RelatedItems: {
+    relatedItems: {
       type: "array",
       items: {
         type: "object",
@@ -593,12 +591,12 @@ const dcRXSchema = {
     },
   },
   required: [
-    "Identifier",
-    "Creators",
-    "Titles",
-    "Publisher",
-    "PublicationYear",
-    "ResourceType",
+    "identifier",
+    "creators",
+    "titles",
+    "publisher",
+    "publicationYear",
+    "resourceType",
   ],
 };
 
@@ -610,17 +608,17 @@ interface DatabaseCollections {
 class MetadataDB extends Dexie {
   metadata!: Table<dcMetadata_4_6, string>;
 
-  constructor() {
-    super("metadataDB6");
+  constructor(flowId: string) {
+    super(`flow_${flowId}`);
 
     this.version(1).stores({
-      metadata: "id, *Creators.name, *Titles.title, Publisher.name, PublicationYear",
+      metadata: "id, *creators.name, *titles.title, publisher.name,publicationYear",
     });
   }
 }
 
 // Hook for database initialization
-export function useDatabase() {
+export function useDatabase(flowId: string) {
   const [db, setDb] = useState<MetadataDB | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -629,21 +627,19 @@ export function useDatabase() {
     async function initDatabase() {
       try {
         setIsLoading(true);
-        const database = new MetadataDB();
+        const database = new MetadataDB(flowId);
         setDb(database);
         setError(null);
       } catch (err) {
         console.error("Database initialization failed:", err);
-        setError(
-          err instanceof Error ? err : new Error("Unknown database error")
-        );
+        setError(err instanceof Error ? err : new Error("Unknown database error"));
       } finally {
         setIsLoading(false);
       }
     }
 
     initDatabase();
-  }, []);
+  }, [flowId]); // 👈 re-run when flowId changes
 
   return { db, isLoading, error };
 }

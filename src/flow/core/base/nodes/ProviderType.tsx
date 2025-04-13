@@ -2,7 +2,13 @@ import React, {useMemo} from 'react';
 
 import RootNode from "./root"
 
-const BasicNode = ({ type,children, group }) => {
+interface BasicNodeProps{
+    type: any;
+    children: any;
+    group: string;
+}
+
+const BasicNode = ({ type,children, group }:BasicNodeProps) => {
   
   return (
     <RootNode incoming={false} outgoing={true}>

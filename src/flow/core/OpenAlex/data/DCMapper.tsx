@@ -410,27 +410,26 @@ interface OpenAlexWork {
     // Basic mapping of OpenAlex work to DC metadata
     const dcMetadata: dcMetadata_4_6 = {
       id: work.id,
-      Identifier: {
+      identifier: {
         identifier: work.doi || work.id,
-        identifierType: "DOI"
       },
-      Creators: creators,
-      Titles: [
+      creators: creators,
+      titles: [
         {
           title: work.title,
           lang: "en",
         }
       ],
-      Publisher: {
+      publisher: {
         name: publisher,
         publisherIdentifier: publisherIdentifier,
         publisherIdentifierScheme: "OpenAlex",
         schemeURI: ""
       },
-      PublicationYear: work.publication_year.toString(),
-      Subjects: mapSubjects(work.concepts),
-      Contributors: [], // Could be mapped from additional authors if classification is available
-      Dates: [
+      publicationYear: work.publication_year,
+      subjects: mapSubjects(work.concepts),
+      contributors: [], // Could be mapped from additional authors if classification is available
+      dates: [
         {
           date: work.publication_date || work.created_date,
           dateType: "Issued",
@@ -442,27 +441,27 @@ interface OpenAlexWork {
           dateInformation: "Last updated in OpenAlex"
         }
       ],
-      Language: work.language || "en",
-      ResourceType: {
+      language: work.language || "en",
+      resourceType: {
         resourceType: work.type,
         resourceTypeGeneral: mapResourceType(work.type)
       },
-      AlternateIdentifiers: generateAlternateIdentifiers(work.ids),
-      RelatedIdentifiers: generateRelatedIdentifiers(work.referenced_works),
-      Sizes: [],
-      Format: "",
-      Version: work.primary_location?.version || "",
-      Rights: rights,
-      Description: work.abstract_inverted_index ? [
+      alternateIdentifiers: generateAlternateIdentifiers(work.ids),
+      relatedIdentifiers: generateRelatedIdentifiers(work.referenced_works),
+      sizes: [],
+      format: "",
+      version: work.primary_location?.version || "",
+      rights: rights,
+      description: work.abstract_inverted_index ? [
         {
           description: extractAbstract(work.abstract_inverted_index),
           descriptionType: "Abstract",
           lang: "en"
         }
       ] : [],
-      GeoLocation: [],
-      FundingReferences: generateFundingReferences(work.grants),
-      RelatedItems: []
+      geoLocation: [],
+      fundingReferences: generateFundingReferences(work.grants),
+      relatedItems: []
     };
   
     return dcMetadata;
