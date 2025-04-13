@@ -12,6 +12,7 @@ This project aims to create a flexible, web-first, no-code tool for constructing
 
 SesameFlow is still evolving. You might run into broken features, missing components, or placeholder logic — but it’s a great time to get involved!
 
+View a hosted toy demo here: https://sesameflow.pages.dev/
 ---
 
 ##  What It Can Do (So Far)
