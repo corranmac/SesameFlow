@@ -10,7 +10,7 @@ This project aims to create a flexible, web-first, no-code tool for constructing
 
 ##  Status: Early Development
 
-SesameFlow is still evolving. You might run into broken features, missing components, or placeholder logic as a result, it is not yet ready for use in production for literature reviews — but it’s a great time to get involved!
+SesameFlow is still evolving. You might run into broken features, missing components, or placeholder logic. **As a result, it is not yet ready for use in production for literature reviews** — but it’s a great time give feedback and get involved!
 
 View a hosted toy demo here: https://sesameflow.pages.dev/
 
