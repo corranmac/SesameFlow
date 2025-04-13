@@ -4,17 +4,17 @@
 
 This project aims to create a flexible, web-first, no-code tool for constructing workflows that pull from academic APIs, filter and combine their outputs, and provide persistent and forkable flows in just a few clicks.
 
-🧪 Built under **Sesame Science** — SesameFlow is a foundational piece of our vision for modular, open infrastructure for academic discovery.
+🧪 Built under **Sesame Science** — SesameFlow is a foundational piece of the vision for modular, open infrastructure for academic discovery and analysis.
 
 ---
 
-## ⚠️ Status: Early Development
+##  Status: Early Development
 
 SesameFlow is still evolving. You might run into broken features, missing components, or placeholder logic — but it’s a great time to get involved!
 
 ---
 
-## ✨ What It Can Do (So Far)
+##  What It Can Do (So Far)
 
 - Visual design of scholarly data workflows via **ReactFlow**
 - Nodes that fetch and filter articles through the OpenAlex API
@@ -22,7 +22,7 @@ SesameFlow is still evolving. You might run into broken features, missing compon
 
 ---
 
-## 🧠 Why SesameFlow?
+## Why SesameFlow?
 
 Research tools today are often commercial, black-boxed, and inflexible often offering aged UX. SesameFlow aims to offer a more modern :
 
@@ -32,7 +32,7 @@ Research tools today are often commercial, black-boxed, and inflexible often off
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 - **React** + **TypeScript**
 - **ReactFlow** – for visual workflows
@@ -52,7 +52,7 @@ npm run dev
 
 ---
 
-## 🛠️ Contributing
+## Contributing
 
 Im welcoming contributors with some experience with React and a passion for open source research software! Here’s how to jump in:
 
@@ -79,7 +79,7 @@ Im welcoming contributors with some experience with React and a passion for open
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Basic search interface with node-wise querying
 - [ ] Reusable components for use across the app
@@ -89,7 +89,7 @@ Im welcoming contributors with some experience with React and a passion for open
 
 ---
 
-## 📬 Get In Touch
+## Get In Touch
 
 If you’re building in this space, interested in embedding SesameFlow in your research process, or just curious — I'd love to hear your thoughts. Open an issue or find me @corranmac.blsky.social
 
