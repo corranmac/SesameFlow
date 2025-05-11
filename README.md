@@ -73,12 +73,6 @@ Im welcoming contributors with some experience with React and a passion for open
 - `src/database/` – Dexie.js logic for per-node data
 - `src/components/` – UI elements (panel, sidebar, editor)
 
-### Tips
-
-- Use `FlowStore.setActiveFlow(flowID)` to control which flow is running
-- Each node can register its own Dexie store via a helper like `getNodeStore(nodeId)`
-- Nodes can emit results or intermediate data that others consume
-
 ---
 
 ## Roadmap
